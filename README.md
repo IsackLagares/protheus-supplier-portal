@@ -51,45 +51,6 @@ Criar via **SX2 + SX3**:
 
 **Índice principal:** Z1_FILIAL + Z1_TOKEN (único)
 
-### 3. Configuração do AppServer (appserver.ini)
-
-```ini
-[HTTPREST]
-Port=8484
-URIRoot=/rest
-Ssl=1
-SslCertificate=certs/server.crt
-SslKey=certs/server.key
-
-[ONSTART]
-JOBS=HTTPJOB
-
-[HTTPJOB]
-MAIN=HTTP_START
-Environment=SEU_AMBIENTE
-```
-
----
-
-## Compilação
-
-Ordem de compilação obrigatória:
-
-```
-1. PFCONST.ch      (include — não gera .erp)
-2. PFBIZ001.prw    (funções utilitárias)
-3. PFREST001.prw   (definição do serviço)
-4. PFAUTH001.prw
-5. PFNF001.prw
-6. PFTIT001.prw
-7. PFFOR001.prw
-```
-
-No **TDS (VS Code ou Eclipse)**: compile todos de uma vez após garantir que o
-`PFCONST.ch` está no mesmo diretório dos `.prw` ou no `include path` do projeto.
-
----
-
 ## Endpoints
 
 ### Autenticação
@@ -208,17 +169,6 @@ Retorna campos cadastrais da SA2 com CNPJ e CEP formatados.
 
 ---
 
-## Tabelas utilizadas
-
-| Tabela | Uso                              | Campos-chave lidos            |
-|--------|----------------------------------|-------------------------------|
-| SA2    | Autenticação + dados cadastrais  | A2_COD, A2_CGC, A2_CHVPF     |
-| SF1    | NFs de entrada (header)          | F1_DOC, F1_SERIE, F1_VALBRUT |
-| SD1    | Itens das NFs                    | D1_DOC, D1_SERIE, D1_TOTAL   |
-| SE2    | Contas a pagar / status          | E2_SALDO, E2_VENCTO, E2_NUM  |
-| Z01PF  | Tokens de sessão (custom)        | Z1_TOKEN, Z1_EXPIRA           |
-
----
 
 ## Segurança
 
@@ -230,20 +180,3 @@ Retorna campos cadastrais da SA2 com CNPJ e CEP formatados.
 
 ---
 
-## Próximos passos sugeridos
-
-- [ ] Criar campo `A2_CHVPF` no SX3
-- [ ] Criar tabela `Z01PF` (SX2 + SX3)
-- [ ] Configurar HTTPREST no appserver.ini
-- [ ] Compilar na ordem indicada acima
-- [ ] Testar `/login` com Postman/Insomnia
-- [ ] Conectar frontend Next.js nos endpoints
-
----
-
-## Evoluções futuras
-
-- **Upload de XML**: endpoint `POST /notas/xml` com validação SEFAZ antes de
-  gravar no Protheus
-- **Notificações Push**: job ADVPL que monitora SE2 e dispara Telegram/WhatsApp
-  quando `E2_BAIXA` é preenchido
